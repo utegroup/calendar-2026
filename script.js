@@ -22,6 +22,7 @@ let generationState = "idle"; // "idle" | "generating" | "finished"
 let currentGenerationPhrase = null;
 let currentFinalPhrase = null;
 
+
 // 🧭 Gestione cronologia browser
 window.addEventListener("popstate", (event) => {
   const page = event.state?.page || "home";
@@ -63,6 +64,10 @@ function updateLanguage() {
       el.innerHTML = el.getAttribute(`data-lang-${currentLang}`);
     }
   });
+
+  // 👇 cambia placeholder in base alla lingua
+  const birthInput = document.getElementById("birthdate");
+  birthInput.placeholder = currentLang === "it" ? "gg/mm/aaaa" : "dd/mm/yyyy";
 }
 
 // 🧭 Navigazione
@@ -72,14 +77,47 @@ function showPage(page, push = true) {
   if (push) pushState(page);
 }
 
+// 📅 Overlay calendario
+const openCalendarBtn = document.getElementById("open-calendar");
+const closeCalendarBtn = document.getElementById("close-calendar");
+const calendarOverlay = document.getElementById("calendar-overlay");
+
+openCalendarBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  calendarOverlay.classList.add("active");
+  document.body.classList.add("overlay-active");
+});
+
+closeCalendarBtn.addEventListener("click", () => {
+  calendarOverlay.classList.remove("active");
+  document.body.classList.remove("overlay-active");
+});
+
+// Chiudi overlay cliccando fuori
+calendarOverlay.addEventListener("click", (e) => {
+  if (e.target === calendarOverlay) {
+    calendarOverlay.classList.remove("active");
+    document.body.classList.remove("overlay-active");
+  }
+});
+
+
 // 🌱 Eventi pagine
 startBtn?.addEventListener("click", () => showPage("date"));
 
 generateBtn?.addEventListener("click", () => {
-  if (!birthInput.value) return alert("Inserisci una data!");
+  const inputValue = birthInput.value;
 
-  const date = new Date(birthInput.value);
-  const formattedDate = `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
+  // ⚠️ Validazione data
+  if (!isValidDate(inputValue)) {
+    alert("Inserisci una data valida nel formato gg/mm/aaaa");
+    return;
+  }
+
+  const [day, month, year] = inputValue.split("/").map(Number);
+  const date = new Date(year, month - 1, day);
+
+  const formattedDate = `${String(day).padStart(2, '0')}/${String(month).padStart(2, '0')}/${year}`;
   selectedDateText.innerHTML = formattedDate;
   showPage("generate");
 
@@ -99,12 +137,11 @@ generateBtn?.addEventListener("click", () => {
 
   void canvas.offsetWidth;
 
-  // 👇 Durata animazione random tra 2 e 6 secondi
-  const minDuration = 1000;
-  const maxDuration = 8000;
+  // Durata animazione random tra 2 e 6 secondi
+  const minDuration = 2000;
+  const maxDuration = 6000;
   const animDuration = Math.floor(Math.random() * (maxDuration - minDuration + 1)) + minDuration;
 
-  // Imposta dinamicamente la durata dell'animazione CSS
   canvas.style.animationDuration = `${animDuration}ms`;
   canvas.classList.add("pixel-animation");
 
@@ -119,6 +156,38 @@ generateBtn?.addEventListener("click", () => {
     generatingText.innerHTML = currentFinalPhrase;
   }, animDuration);
 });
+
+// ✨ Formattazione automatica gg/mm/aaaa
+birthInput.addEventListener("input", (e) => {
+  let value = e.target.value.replace(/\D/g, "");
+
+  // 🇮🇹 gg/mm/aaaa oppure 🇬🇧 dd/mm/yyyy — la struttura è identica
+  if (value.length >= 3 && value.length <= 4) {
+    value = value.slice(0, 2) + "/" + value.slice(2);
+  } else if (value.length >= 5) {
+    value = value.slice(0, 2) + "/" + value.slice(2, 4) + "/" + value.slice(4, 8);
+  }
+
+  e.target.value = value;
+});
+
+// ✅ Funzione per controllare che la data sia valida
+function isValidDate(value) {
+  const parts = value.split("/");
+  if (parts.length !== 3) return false;
+
+  const [day, month, year] = parts.map(Number);
+
+  // Controllo formale
+  if (!day || !month || !year || year < 1000 || year > 9999) return false;
+
+  const date = new Date(year, month - 1, day);
+  return (
+    date.getFullYear() === year &&
+    date.getMonth() === month - 1 &&
+    date.getDate() === day
+  );
+}
 
 // ✨ Frasi di generazione
 const generationPhrases = {
