@@ -383,3 +383,4 @@ logo?.addEventListener("click", () => {
   showPage("home", false);
   history.replaceState({ page: "home" }, "", "#home");
 });
+
