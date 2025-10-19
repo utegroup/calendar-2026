@@ -3,10 +3,10 @@
 }
 
 @font-face {
-    font-family: "Alt_mono";
-    src: url("fonts/Alt_mono.woff") format("woff");
-    font-weight: normal;
-    font-style: normal;
+  font-family: "Alt_mono";
+  src: url("fonts/Alt_mono.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
 }
 
 body, input {
@@ -16,7 +16,6 @@ body, input {
 body {
   background: #000;
   color: #fff;
-  font-family: "Alt_mono", monospace;
   margin: 0;
   padding: 0;
   display: flex;
@@ -24,7 +23,7 @@ body {
   height: 100vh;
 }
 
-/* HEADER */
+/* ================= HEADER ================= */
 header {
   display: flex;
   justify-content: space-between;
@@ -32,9 +31,54 @@ header {
   padding: 30px 15px;
 }
 
+#header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+/* Freccia indietro */
+#back-arrow {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+#back-arrow img {
+  height: 24px;
+  width: auto;
+  filter: brightness(0) invert(1);
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+#back-arrow.visible {
+  display: flex;
+  animation: slideInLeft 0.3s ease;
+}
+
+#back-arrow:hover img {
+  transform: translateX(-4px);
+  filter: brightness(0) invert(1) brightness(1.5);
+}
+
+/* Animazione freccia */
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* Logo */
+#logo-container img {
+  height: 35px;
+}
+
+/* Language switcher */
 #language-switcher {
   display: flex;
   gap: 5px;
+  cursor: pointer;
 }
 
 .lang-btn {
@@ -56,11 +100,7 @@ header {
   border: 1px solid #444;
 }
 
-#logo-container img {
-  height: 40px;
-}
-
-/* PAGE STRUCTURE */
+/* ================= PAGINE ================= */
 .page {
   display: none;
   flex: 1;
@@ -85,7 +125,7 @@ header {
 }
 
 .cover-img {
-  max-width: 280px;
+  max-width: 260px;
   margin-bottom: 30px;
 }
 
@@ -102,13 +142,14 @@ header {
   border-radius: 30px;
   font-size: 1.2rem;
   cursor: pointer;
-  margin-top: 50px;
+  margin-top: 40px;
 }
 
 .primary-btn:hover {
   background: #666;
 }
 
+/* ================= HOME LINKS ================= */
 .home-links {
   margin-top: 30px;
   display: flex;
@@ -128,19 +169,26 @@ header {
   color: #444;
 }
 
-/* Overlay calendario */
+#home-link-ute {
+  margin-top: 10px;
+  text-decoration: none;
+}
+
+/* ================= OVERLAY CALENDARIO ================= */
 #calendar-overlay {
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.8);
   display: flex;
   justify-content: center;
-  align-items: flex-end; /* partenza dal basso */
+  align-items: flex-end;
   z-index: 1000;
   backdrop-filter: blur(10px);
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.4s ease;
+  top: 100px;
+  border-top: #444 1px solid;
   overflow: hidden;
 }
 
@@ -149,7 +197,6 @@ header {
   pointer-events: auto;
 }
 
-/* Contenitore dell'overlay con animazione di entrata */
 .overlay-content {
   position: relative;
   background: rgba(0,0,0,0.7);
@@ -166,13 +213,14 @@ header {
   transform: translateY(0);
 }
 
-/* Bottone X sempre fisso sopra l’overlay */
+/* Bottone X */
 #close-calendar {
   position: absolute;
   top: 20px;
   right: 25px;
-  background: none;
-  border: none;
+  padding: 0px 10px;
+  background: black;
+  border: #444 1px solid;
   color: white;
   font-size: 2.5rem;
   cursor: pointer;
@@ -184,10 +232,12 @@ header {
   transform: scale(1.1);
 }
 
+/* Galleria immagini calendario */
 .calendar-gallery {
   display: grid;
   gap: 10px;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  margin-top: 60px;
 }
 
 .calendar-gallery img {
@@ -202,17 +252,16 @@ header {
   transform: scale(1.03);
 }
 
-/* Sfocatura background home quando overlay attivo */
+/* Sfocatura home quando overlay attivo */
 body.overlay-active #page-home {
   filter: blur(5px);
   pointer-events: none;
 }
 
-
-/* DATE PAGE */
+/* ================= DATE PAGE ================= */
 .date-text {
-    font-size: 1.2rem;
-    max-width: 300px;
+  font-size: 1.2rem;
+  max-width: 300px;
 }
 
 .btn-row {
@@ -223,11 +272,12 @@ body.overlay-active #page-home {
 }
 
 .reset-btn {
-    background: none;
-    color: white;
-    font-size: 0.9rem;
-    border: none;
-    font-family: "Alt_mono", monospace;
+  background: none;
+  color: white;
+  font-size: 0.9rem;
+  border: none;
+  font-family: "Alt_mono", monospace;
+  cursor: pointer;
 }
 
 input[type="text"]#birthdate {
@@ -246,27 +296,25 @@ input[type="text"]#birthdate::placeholder {
 }
 
 .privacy-text {
-  font-size: 0.9rem;
+  font-size: 0.7rem;
   color: #444;
   max-width: 300px;
   margin-top: 70px;
   line-height: 1.4;
 }
 
-/* GENERATION PAGE */
+/* ================= GENERATION PAGE ================= */
 .top-text {
   text-align: center;
   width: 100%;
   max-width: 300px;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   font-size: 0.9rem;
 }
 
 .selected-date {
   color: #444;
   font-size: 1.2rem;
-  padding: 0;
-  margin: 0;
   margin-bottom: 10px;
 }
 
@@ -284,7 +332,6 @@ input[type="text"]#birthdate::placeholder {
   overflow: hidden;
 }
 
-/* Overlay durante generazione */
 .canvas-container.generating::before {
   content: "";
   position: absolute;
@@ -296,11 +343,11 @@ input[type="text"]#birthdate::placeholder {
 canvas {
   width: 100%;
   height: 100%;
-  opacity: 0; /* si anima in pixel build */
+  opacity: 0;
   object-fit: cover;
 }
 
-/* Download button con immagine */
+/* Download button */
 .download-btn {
   position: absolute;
   bottom: 10px;
@@ -337,6 +384,7 @@ canvas {
   pointer-events: none;
   transition: opacity .4s ease;
   margin-top: 10px;
+  cursor: pointer;
 }
 
 .back-btn.visible {
@@ -348,7 +396,7 @@ canvas {
   background: #666;
 }
 
-/* ANIMAZIONE PIXEL BUILD */
+/* ================= ANIMAZIONE PIXEL BUILD ================= */
 @keyframes pixelBuild {
   0% {
     image-rendering: pixelated;
@@ -379,4 +427,83 @@ canvas {
 .pixel-animation {
   animation: pixelBuild 2500ms ease-in-out forwards;
   transform-origin: center;
+}
+
+
+/* ================= VERSIONE DESKTOP ================= */
+@media (min-width: 1024px) {
+  /* Font da 1.2rem → 2rem */
+  .primary-btn,
+  .date-text,
+  input[type="text"]#birthdate,
+  .selected-date {
+    font-size: 2rem;
+  }
+
+  /* Font da 0.9rem → 1.5rem */
+  .lang-btn,
+  .intro-text,
+  .home-link,
+  .reset-btn,
+  .top-text,
+  .back-btn {
+    font-size: 1.5rem;
+  }
+
+  /* Font da 0.7rem → 1.2rem */
+  .privacy-text {
+    font-size: 1.2rem;
+  }
+
+  /* Ingrandiamo leggermente anche la X di chiusura */
+  #close-calendar {
+    font-size: 3rem;
+  }
+
+  /* Margini più ampi */
+  .primary-btn {
+    padding: 20px 40px;
+  }
+
+  header {
+    padding: 40px 30px;
+  }
+
+  .cover-img {
+    max-width: 400px;
+  }
+
+  .canvas-container {
+    max-width: 650px;
+  }
+
+  .download-btn img {
+    width: 60px;
+    height: 60px;
+  }
+
+  .intro-text, .date-text, .privacy-text, .top-text {
+    max-width: 1000px;
+  }
+
+  .home-links {
+    margin-top: 50px;
+  }
+
+  .overlay-content {
+    max-width: 1200px;
+    max-height: 90vh;
+    overflow-y: auto;
+    transform: translateY(100%);
+    transition: transform 0.5s ease;
+  }
+
+  #logo-container img {
+    height: 60px;
+  }
+
+  .page, #page-generate {
+    padding-top: 5vh;
+  }
+
 }
