@@ -10,14 +10,20 @@
 <body>
   <!-- HEADER -->
   <header>
-    <div id="logo-container">
-      <img src="img/logo.png" alt="Logo" id="logo">
+    <div id="header-left">
+      <div id="back-arrow">
+        <img src="img/arrow-left.svg" alt="Torna indietro">
+      </div>
+      <div id="logo-container">
+        <img src="img/logo.png" alt="Logo" id="logo">
+      </div>
     </div>
     <div id="language-switcher">
       <button class="lang-btn" data-lang="it">IT</button>
       <button class="lang-btn" data-lang="en">EN</button>
     </div>
   </header>
+
 
   <!-- HOME PAGE -->
   <section id="page-home" class="page active">
@@ -39,9 +45,9 @@
         <a href="#" id="open-calendar" class="home-link"
           data-lang-it="Esplora il calendario di quest'anno"
           data-lang-en="Explore this year's calendar">Scopri il calendario</a>
-        <a href="https://www.utegroup.it" target="_blank" rel="noopener" class="home-link"
-          data-lang-it="Visita il nostro sito"
-          data-lang-en="Visit our website">Visita il nostro sito</a>
+        <a href="https://www.utegroup.it" target="_blank" rel="noopener" class="home-link" id="home-link-ute"
+          data-lang-it="> Visita il nostro sito"
+          data-lang-en="> Visit our website">Visita il nostro sito</a>
       </div>
     </div>
   </section>
@@ -109,7 +115,7 @@
       </div>
 
       <p class="privacy-text"
-        data-lang-it="*La data inserita non viene raccolta né utilizzata per altri fini."
+        data-lang-it="*La data inserita non viene raccolta e utilizzata per altri fini."
         data-lang-en="*The entered date is not collected or used for any other purpose.">
         *La data inserita non viene raccolta né utilizzata per altri fini.
       </p>
@@ -145,4 +151,3 @@
   <script src="script.js"></script>
 </body>
 </html>
-
