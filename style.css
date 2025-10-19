@@ -21,7 +21,7 @@ body {
   padding: 0;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
 }
 
 /* HEADER */
@@ -109,6 +109,106 @@ header {
   background: #666;
 }
 
+.home-links {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.home-link {
+  color: #fff;
+  text-decoration: underline;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.home-link:hover {
+  color: #444;
+}
+
+/* Overlay calendario */
+#calendar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.8);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end; /* partenza dal basso */
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  overflow: hidden;
+}
+
+#calendar-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Contenitore dell'overlay con animazione di entrata */
+.overlay-content {
+  position: relative;
+  background: rgba(0,0,0,0.7);
+  padding: 20px;
+  width: 100%;
+  max-width: 900px;
+  max-height: 90vh;
+  overflow-y: auto;
+  transform: translateY(100%);
+  transition: transform 0.5s ease;
+}
+
+#calendar-overlay.active .overlay-content {
+  transform: translateY(0);
+}
+
+/* Bottone X sempre fisso sopra l’overlay */
+#close-calendar {
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 2.5rem;
+  cursor: pointer;
+  z-index: 2001;
+  transition: transform 0.2s;
+}
+
+#close-calendar:hover {
+  transform: scale(1.1);
+}
+
+.calendar-gallery {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.calendar-gallery img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  transition: transform 0.3s;
+  border: #444 1px solid;
+}
+
+.calendar-gallery img:hover {
+  transform: scale(1.03);
+}
+
+/* Sfocatura background home quando overlay attivo */
+body.overlay-active #page-home {
+  filter: blur(5px);
+  pointer-events: none;
+}
+
+
 /* DATE PAGE */
 .date-text {
     font-size: 1.2rem;
@@ -130,20 +230,26 @@ header {
     font-family: "Alt_mono", monospace;
 }
 
-input[type="date"] {
+input[type="text"]#birthdate {
   background: none;
   border: #444 1px solid;
   color: white;
   padding: 12px;
   font-size: 1.2rem;
   border-radius: 8px;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+input[type="text"]#birthdate::placeholder {
+  color: #444;
 }
 
 .privacy-text {
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   color: #444;
   max-width: 300px;
-  margin-top: 50px;
+  margin-top: 70px;
   line-height: 1.4;
 }
 
