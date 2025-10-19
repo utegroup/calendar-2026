@@ -15,6 +15,36 @@ const selectedDateText = document.getElementById("selected-date");
 const canvasContainer = document.getElementById("canvasContainer");
 const generatingText = document.querySelector(".generating-text");
 
+const backArrow = document.getElementById("back-arrow");
+
+function updateBackArrow(page) {
+  if (page === "date" || page === "generate") {
+    backArrow.classList.add("visible");
+  } else {
+    backArrow.classList.remove("visible");
+  }
+}
+
+// 👈 Azione della freccia indietro
+backArrow.addEventListener("click", () => {
+  if (pages.generate.classList.contains("active")) {
+    showPage("date");
+  } else if (pages.date.classList.contains("active")) {
+    showPage("home");
+  }
+});
+
+const logo = document.getElementById("logo");
+
+logo.addEventListener("click", () => {
+  if (pages.generate.classList.contains("active")) {
+    showPage("date");
+  } else if (pages.date.classList.contains("active")) {
+    showPage("home");
+  }
+});
+
+
 // 🌍 Lingua
 const langButtons = document.querySelectorAll(".lang-btn");
 let currentLang = "it";
@@ -74,8 +104,10 @@ function updateLanguage() {
 function showPage(page, push = true) {
   Object.values(pages).forEach(p => p.classList.remove("active"));
   pages[page].classList.add("active");
+  updateBackArrow(page); // 👈 aggiunto qui
   if (push) pushState(page);
 }
+
 
 // 📅 Overlay calendario
 const openCalendarBtn = document.getElementById("open-calendar");
@@ -244,10 +276,29 @@ backBtn?.addEventListener("click", () => {
 });
 
 downloadBtn?.addEventListener("click", () => {
-  const a = document.createElement("a");
-  a.download = 'anello_personale.png';
-  a.href = canvas.toDataURL(); // 👉 ora 2048x2048
-  a.click();
+  canvas.toBlob((blob) => {
+    const file = new File([blob], "anello_personale.png", { type: "image/png" });
+
+    // 📲 Se il dispositivo supporta la Web Share API (iOS / Android moderni)
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      navigator.share({
+        files: [file],
+        title: 'Anello personale',
+        text: 'Ecco il tuo anello generato: un frammento di tempo, solo tuo.',
+      }).catch((err) => {
+        console.log('Condivisione annullata o non riuscita:', err);
+      });
+    } else {
+      // 💾 Fallback: download classico
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "anello_personale.png";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(a.href);
+    }
+  }, "image/png");
 });
 
 // 🖼️ Canvas + Generazione immagine
@@ -318,12 +369,21 @@ function generateCircle(date) {
 
   const TWELVE = 11;
   const BLOCKED_PAIR = 7;
+  const IMG3 = 2;
+  const IMG5 = 4;
 
   let baseIndex = month - 1;
   let overlayIndex = pickOverlayIndex(baseIndex, rand);
 
+  // ❌ Evita coppia bloccata 12–8
   while ((baseIndex === TWELVE && overlayIndex === BLOCKED_PAIR) ||
          (baseIndex === BLOCKED_PAIR && overlayIndex === TWELVE)) {
+    overlayIndex = pickOverlayIndex(baseIndex, rand);
+  }
+
+  // ❌ Evita coppia bloccata 3–5
+  while ((baseIndex === IMG3 && overlayIndex === IMG5) ||
+         (baseIndex === IMG5 && overlayIndex === IMG3)) {
     overlayIndex = pickOverlayIndex(baseIndex, rand);
   }
 
@@ -372,15 +432,3 @@ window.addEventListener("DOMContentLoaded", () => {
   updateLangButtons();
   pushState("home");
 });
-
-// 🏠 Clic sul logo → torna alla home
-const logo = document.getElementById("logo");
-logo?.addEventListener("click", () => {
-  generationState = "idle";
-  currentGenerationPhrase = null;
-  currentFinalPhrase = null;
-  birthInput.value = "";
-  showPage("home", false);
-  history.replaceState({ page: "home" }, "", "#home");
-});
-
